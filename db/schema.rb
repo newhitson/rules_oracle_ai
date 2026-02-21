@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_20_230721) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_21_212208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -21,8 +21,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_20_230721) do
     t.vector "embedding", limit: 1536
     t.string "section_number", null: false
     t.string "title"
+    t.string "top_level_section"
     t.datetime "updated_at", null: false
     t.index ["embedding"], name: "index_comp_rules_embeddings_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
     t.index ["section_number"], name: "index_comp_rules_embeddings_on_section_number", unique: true
+    t.index ["top_level_section"], name: "index_comp_rules_embeddings_on_top_level_section"
   end
 end
