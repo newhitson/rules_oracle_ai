@@ -10,17 +10,23 @@ class CompRulesEmbedding < ApplicationRecord
   end
 
   def self.generate_embedding(text)
-    client = OpenAI::Client.new
-    response = client.embeddings(
-      parameters: {
-        model: "text-embedding-3-small",
-        input: text
-      }
-    )
-    response.dig("data", 0, "embedding")
+    EmbeddingService.new.call(text)
   end
 
   before_save :set_embedding, if: -> { embedding.blank? || content_changed? }
+
+  def inspect
+    embedding_summary = embedding.present? ? "[#{embedding.length} floats]" : "nil"
+    "#<CompRulesEmbedding\n" \
+      " id: #{id},\n" \
+      " section_number: #{section_number.inspect},\n" \
+      " top_level_section: #{top_level_section.inspect},\n" \
+      " title: #{title.inspect},\n" \
+      " content: #{content&.truncate(80).inspect},\n" \
+      " embedding: #{embedding_summary},\n" \
+      " created_at: #{created_at.inspect},\n" \
+      " updated_at: #{updated_at.inspect}>"
+  end
 
   private
 
