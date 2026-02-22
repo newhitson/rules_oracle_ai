@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe EmbeddingService do
   let(:service) { described_class.new }
   let(:fake_vector) { Array.new(1536, 0.1) }
-  let(:fake_response) { { "data" => [{ "embedding" => fake_vector }] } }
+  let(:fake_response) { { "data" => [ { "embedding" => fake_vector } ] } }
 
   before do
     allow_any_instance_of(OpenAI::Client).to receive(:embeddings).and_return(fake_response)
