@@ -39,4 +39,23 @@ namespace :rules do
 
     puts "Imported #{count} rules."
   end
+
+  desc "Generate and store embeddings for all CompRulesEmbedding records without one"
+  task embed: :environment do
+    batch_size = 100
+    scope = CompRulesEmbedding.where(embedding: nil)
+    total = scope.count
+
+    puts "Embedding #{total} rules sections in batches of #{batch_size}..."
+
+    scope.find_in_batches(batch_size: batch_size).with_index do |batch, i|
+      embeddings = EmbeddingService.new.call_batch(batch.map(&:content))
+      batch.each_with_index do |record, j|
+        record.update_column(:embedding, embeddings[j])
+      end
+      puts "  Batch #{i + 1}: #{[ (i + 1) * batch_size, total ].min}/#{total}"
+    end
+
+    puts "Done."
+  end
 end
