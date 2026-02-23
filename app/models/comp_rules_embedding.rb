@@ -4,9 +4,12 @@ class CompRulesEmbedding < ApplicationRecord
   validates :section_number, presence: true, uniqueness: true
   validates :content, presence: true
 
-  def self.search(query, limit: 5)
-    embedding = generate_embedding(query)
+  scope :similar_to, ->(embedding, limit: 5) {
     nearest_neighbors(:embedding, embedding, distance: "cosine").limit(limit)
+  }
+
+  def self.search(query, limit: 5)
+    similar_to(generate_embedding(query), limit: limit)
   end
 
   def self.generate_embedding(text)
