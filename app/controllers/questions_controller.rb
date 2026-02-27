@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def create
     if params[:text].blank?
       render json: { error: "text is required" }, status: :unprocessable_content

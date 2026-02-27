@@ -1,0 +1,51 @@
+# Evaluation questions for the Rules Oracle semantic search system.
+#
+# Each entry:
+#   question:          Natural language question a user would ask
+#   expected_sections: Section number prefixes that must appear in top-10 results.
+#                      "702.9" matches 702.9, 702.9a, 702.9b, etc.
+#   notes:             (optional) What this test is checking
+#
+# To add a question, append a new entry. Run: rails eval:questions
+# First run fetches embeddings from OpenAI and caches them locally.
+# Subsequent runs are free (no API calls unless questions change).
+
+- question: "Can a creature with flying be blocked by a creature with reach?"
+  expected_sections:
+    - "702.9"
+  notes: "Core flying/reach interaction"
+
+- question: "What happens when a creature with deathtouch deals combat damage?"
+  expected_sections:
+    - "702.2"
+  notes: "Deathtouch destruction rule"
+
+- question: "Does a creature with first strike deal damage before other creatures?"
+  expected_sections:
+    - "702.7"
+  notes: "First strike combat timing"
+
+- question: "How does a player lose the game when their life total reaches zero?"
+  expected_sections:
+    - "104.3"
+  notes: "Win/loss conditions"
+
+- question: "What is the minimum deck size in constructed play?"
+  expected_sections:
+    - "100.2"
+  notes: "Deck construction rules"
+
+- question: "How does trample work when blocking creatures have different toughness?"
+  expected_sections:
+    - "702.19"
+  notes: "Trample damage assignment"
+
+- question: "What does it mean to destroy a creature?"
+  expected_sections:
+    - "701.8"
+  notes: "Destroy action definition"
+
+- question: "When does a triggered ability go on the stack?"
+  expected_sections:
+    - "603"
+  notes: "Triggered ability timing"
