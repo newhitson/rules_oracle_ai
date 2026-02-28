@@ -13,8 +13,16 @@ RSpec.describe "Questions", type: :request do
 
   let(:fake_results) { Array.new(5, fake_rule) }
 
+  let(:fake_answer_result) do
+    {
+      answer: "Yes, a creature with reach can block a creature with flying.",
+      sources: [ { section_number: "702.9b", title: "Flying" } ]
+    }
+  end
+
   before do
     allow(CompRulesEmbedding).to receive(:search).and_return(fake_results)
+    allow(AnswerService).to receive(:call).and_return(fake_answer_result)
   end
 
   describe "POST /questions" do
@@ -49,6 +57,24 @@ RSpec.describe "Questions", type: :request do
         post "/questions", params: { text: "flying" }
         result = response.parsed_body["results"].first
         expect(result["similarity"]).to eq(1 - fake_rule.neighbor_distance)
+      end
+
+      it "includes an answer in the response" do
+        post "/questions", params: { text: "can a creature with flying be blocked" }
+        expect(response.parsed_body["answer"]).to eq(fake_answer_result[:answer])
+      end
+
+      it "includes sources in the response" do
+        post "/questions", params: { text: "can a creature with flying be blocked" }
+        expect(response.parsed_body["sources"]).to be_an(Array)
+      end
+
+      it "passes the question and results to AnswerService" do
+        expect(AnswerService).to receive(:call).with(
+          question: "flying rules",
+          rule_sections: array_including(hash_including(section_number: "702.9b"))
+        ).and_return(fake_answer_result)
+        post "/questions", params: { text: "flying rules" }
       end
     end
 
