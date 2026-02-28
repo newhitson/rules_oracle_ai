@@ -9,7 +9,7 @@ class AnswerService
     client = OpenAI::Client.new
     response = client.chat(parameters: { model: MODEL, messages: build_messages(question, rule_sections) })
     answer = response.dig("choices", 0, "message", "content")
-    sources = rule_sections.map { |s| { section_number: s[:section_number], title: s[:title] } }
+    sources = rule_sections.map { |s| { section_number: s[:section_number], title: s[:title], content: s[:content] } }
     { answer: answer, sources: sources }
   end
 

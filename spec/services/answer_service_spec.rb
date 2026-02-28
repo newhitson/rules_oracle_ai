@@ -41,9 +41,13 @@ RSpec.describe AnswerService do
       expect(result[:sources]).to be_an(Array)
     end
 
-    it 'includes section_number and title in each source' do
+    it 'includes section_number, title, and content in each source' do
       result = described_class.call(question: question, rule_sections: rule_sections)
-      expect(result[:sources].first).to eq({ section_number: "702.9b", title: "Flying" })
+      expect(result[:sources].first).to eq({
+        section_number: "702.9b",
+        title: "Flying",
+        content: "A creature with flying can't be blocked except by creatures with flying and/or reach."
+      })
     end
 
     it 'returns one source per rule section' do
@@ -51,10 +55,9 @@ RSpec.describe AnswerService do
       expect(result[:sources].length).to eq(rule_sections.length)
     end
 
-    it 'does not include content or similarity in sources' do
+    it 'does not include similarity in sources' do
       result = described_class.call(question: question, rule_sections: rule_sections)
       result[:sources].each do |source|
-        expect(source).not_to have_key(:content)
         expect(source).not_to have_key(:similarity)
       end
     end
