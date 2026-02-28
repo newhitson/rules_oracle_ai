@@ -1,4 +1,5 @@
-class EvalReporter
+module Eval
+  class EvalReporter
   Result = Struct.new(:question, :passed, :matched_section, :matched_rank, :expected)
 
   def initialize
@@ -52,5 +53,6 @@ class EvalReporter
     end
     puts "=" * 70
     puts ""
+  end
   end
 end

@@ -22,7 +22,7 @@ namespace :eval do
 
     puts "Loaded #{questions.length} questions."
 
-    cache = EmbeddingCache.load(cache_path)
+    cache = Eval::EmbeddingCache.load(cache_path)
     uncached = questions.reject { |q| cache.hit?(q["question"]) }
 
     if uncached.any?
@@ -35,7 +35,7 @@ namespace :eval do
       puts "All embeddings cached — no API calls needed."
     end
 
-    reporter = EvalReporter.new
+    reporter = Eval::EvalReporter.new
 
     questions.each do |fixture|
       question  = fixture["question"]

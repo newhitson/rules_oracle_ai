@@ -1,7 +1,8 @@
 require "digest"
 require "json"
 
-class EmbeddingCache
+module Eval
+  class EmbeddingCache
   def self.load(path)
     data = File.exist?(path) ? JSON.parse(File.read(path)) : {}
     new(data)
@@ -31,5 +32,6 @@ class EmbeddingCache
 
   def key_for(text)
     Digest::SHA256.hexdigest(text)
+  end
   end
 end
