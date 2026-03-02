@@ -74,4 +74,26 @@ Rule 100.2a (constructed minimum: 60 cards) was the top result and directly answ
 
 - Investigate why 104.2 subsections aren't being retrieved for the "win the game" question
 - Investigate why 702.19b isn't ranking higher for trample questions
-- Strengthen prompt grounding instruction — the LLM is repeatedly citing rules it found via cross-references ("See rule 704") inside retrieved text, rather than limiting citations strictly to the provided rule sections. This is now a recurring pattern across questions 5 and 6.
+- Strengthen prompt grounding instruction — the LLM is repeatedly citing rules it found via cross-references ("See rule 704") inside retrieved text, rather than limiting citations strictly to the provided rule sections. This is now a recurring pattern across questions 5, 6, and 7.
+
+---
+
+## Prompt v1.1 Update
+
+**Problem addressed:** The LLM was consistently following cross-references embedded in rule text (e.g. "See rule 704", "See rule 117.5") and citing those rules as if they had been provided, violating the grounding constraint.
+
+**Changes made:**
+
+1. **System prompt (paragraph 2)** — Added explicit prohibition: "You will be told exactly which rule section numbers are available to you — you must not cite any other rule number. Many rules contain cross-references such as 'See rule 704' or 'See rule 117.5' — these cross-references do not make those rules available to you, and you must not cite them."
+
+2. **User message** — Now opens with an explicit allowlist of permitted section numbers before the rules text: "You may only cite these rule sections: [list]. Many rules contain cross-references such as 'See rule 704' — do not cite any rule referenced this way unless its full text appears below."
+
+**Re-run results:**
+
+| Question | Before | After |
+|----------|--------|-------|
+| Trample with multiple blockers | ⚠️ Cited rule 510.1 (not retrieved) | ✅ Only cited 702.19a, 702.19d |
+| What does it mean to destroy a creature? | ⚠️ Cited rule 704 (not retrieved) | ✅ Only cited 302.7, 120.6, 701.8b, 702.2b |
+| When does a triggered ability go on the stack? | ⚠️ Cited rule 117.5 (not retrieved) | ✅ Only cited 117.2a, 503.1a, 723.1a, 723.2a |
+
+Cross-reference leaking is resolved across all three previously flagged questions.
