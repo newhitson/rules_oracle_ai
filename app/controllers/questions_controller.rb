@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
       return
     end
 
-    results = CompRulesEmbedding.search(params[:text]).map do |rule|
+    rules = CompRulesEmbedding.search(params[:text]).map do |rule|
       {
         section_number: rule.section_number,
         title: rule.title,
@@ -17,8 +17,8 @@ class QuestionsController < ApplicationController
       }
     end
 
-    answer_result = AnswerService.call(question: params[:text], rule_sections: results)
+    answer_result = AnswerService.call(question: params[:text], rule_sections: rules)
 
-    render json: { results: results, answer: answer_result[:answer], sources: answer_result[:sources] }
+    render json: { answer: answer_result[:answer], sources: answer_result[:sources] }
   end
 end
