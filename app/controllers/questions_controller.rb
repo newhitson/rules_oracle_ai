@@ -19,6 +19,14 @@ class QuestionsController < ApplicationController
 
     answer_result = AnswerService.call(question: params[:text], rule_sections: rules)
 
+    Question.create!(
+      text: params[:text],
+      confidence: answer_result[:confidence],
+      answer: answer_result[:answer],
+      message: answer_result[:message],
+      sources: answer_result[:sources]
+    )
+
     render json: { answer: answer_result[:answer], sources: answer_result[:sources] }
   end
 end

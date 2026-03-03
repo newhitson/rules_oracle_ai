@@ -19,6 +19,7 @@ RSpec.describe "Questions", type: :request do
 
   let(:fake_answer_result) do
     {
+      confidence: "sufficient",
       answer: "Yes, a creature with reach can block a creature with flying.",
       sources: Array.new(5, fake_source)
     }
@@ -64,6 +65,11 @@ RSpec.describe "Questions", type: :request do
       it "includes sources in the response" do
         post "/questions", params: { text: "can a creature with flying be blocked" }
         expect(response.parsed_body["sources"]).to be_an(Array)
+      end
+
+      it "persists the question to the database" do
+        expect { post "/questions", params: { text: "can a creature with flying be blocked" } }
+          .to change(Question, :count).by(1)
       end
 
       it "passes the question and results to AnswerService" do
