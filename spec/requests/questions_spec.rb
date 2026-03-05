@@ -99,5 +99,33 @@ RSpec.describe "Questions", type: :request do
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
+
+    context "rate limiting" do
+      it "allows requests within the limit" do
+        post "/questions", params: { text: "flying" }
+        expect(response).not_to have_http_status(:too_many_requests)
+      end
+
+      context "when the rate limit is exceeded" do
+        before do
+          # rate_limit captures the cache store object at class-load time, so swapping
+          # Rails.cache later has no effect. Instead we mock increment directly on the
+          # already-captured store object (which is the same object as Rails.cache).
+          # The test env uses NullStore, whose increment returns nil and never triggers
+          # the limit — returning 51 here simulates an exhausted counter.
+          allow(Rails.cache).to receive(:increment).and_return(51)
+        end
+
+        it "returns 429" do
+          post "/questions", params: { text: "flying" }
+          expect(response).to have_http_status(:too_many_requests)
+        end
+
+        it "returns a JSON error body" do
+          post "/questions", params: { text: "flying" }
+          expect(response.parsed_body["error"]).to eq("rate limit exceeded")
+        end
+      end
+    end
   end
 end

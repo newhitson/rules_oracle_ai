@@ -1,6 +1,9 @@
 class QuestionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  rate_limit to: 50, within: 24.hours, only: :create,
+             with: -> { render json: { error: "rate limit exceeded" }, status: :too_many_requests }
+
   def create
     if params[:text].blank?
       render json: { error: "text is required" }, status: :unprocessable_content
