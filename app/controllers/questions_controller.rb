@@ -4,9 +4,15 @@ class QuestionsController < ApplicationController
   rate_limit to: 50, within: 24.hours, only: :create,
              with: -> { render json: { error: "rate limit exceeded" }, status: :too_many_requests }
 
+  def new
+  end
+
   def create
     if params[:text].blank?
-      render json: { error: "text is required" }, status: :unprocessable_content
+      respond_to do |format|
+        format.json { render json: { error: "text is required" }, status: :unprocessable_content }
+        format.html { @error = "Please enter a question."; render :new, status: :unprocessable_content }
+      end
       return
     end
 
@@ -30,6 +36,14 @@ class QuestionsController < ApplicationController
       sources: answer_result[:sources]
     )
 
-    render json: { answer: answer_result[:answer], sources: answer_result[:sources] }
+    respond_to do |format|
+      format.json { render json: { answer: answer_result[:answer], sources: answer_result[:sources] } }
+      format.html do
+        @question_text = params[:text]
+        @answer = answer_result[:answer]
+        @sources = answer_result[:sources]
+        render :new
+      end
+    end
   end
 end
