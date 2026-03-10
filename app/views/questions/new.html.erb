@@ -1,27 +1,50 @@
-<h1>Ask a Rules Question</h1>
+<h1 class="text-3xl font-bold tracking-tight mb-8">Ask a Rules Question</h1>
 
 <% if @error %>
-  <p><%= @error %></p>
+  <p class="mb-4 text-sm text-red-600"><%= @error %></p>
 <% end %>
 
 <%= form_with url: questions_path, method: :post, data: { turbo_frame: "results" } do |f| %>
-  <%= f.text_area :text, placeholder: "e.g. Can a creature with flying be blocked?",
-                         value: @question_text, rows: 3 %>
-  <%= f.submit "Ask" %>
+  <%= f.text_area :text,
+        placeholder: "e.g. Can a creature with flying be blocked?",
+        value: @question_text,
+        rows: 4,
+        class: "w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-base text-gray-900
+                placeholder:text-gray-400 focus:outline-none focus:border-blue-500
+                resize-none shadow-sm" %>
+  <%= f.submit "Ask",
+        class: "mt-3 w-full rounded-xl bg-blue-600 py-3 text-base font-semibold text-white
+                hover:bg-blue-700 active:bg-blue-800 cursor-pointer transition-colors" %>
 <% end %>
 
 <%= turbo_frame_tag "results" do %>
   <% if @answer %>
-    <h2>Answer</h2>
-    <p><%= @answer %></p>
+    <div class="mt-8 rounded-2xl border border-blue-100 bg-blue-50 px-6 py-5">
+      <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-blue-400">Answer</p>
+      <p class="text-gray-800 leading-relaxed"><%= @answer %></p>
+    </div>
 
     <% if @sources&.any? %>
-      <h2>Sources</h2>
-      <ul>
-        <% @sources.each do |source| %>
-          <li><strong><%= source[:section_number] %></strong> — <%= source[:title] %>: <%= source[:content] %></li>
-        <% end %>
-      </ul>
+      <details class="mt-4 group">
+        <summary class="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-500
+                        hover:text-gray-700 select-none list-none">
+          <svg class="size-4 transition-transform group-open:rotate-90" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+          <%= @sources.length %> source<%= @sources.length == 1 ? "" : "s" %>
+        </summary>
+        <ul class="mt-3 space-y-2">
+          <% @sources.each do |source| %>
+            <li class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600">
+              <span class="font-semibold text-gray-900"><%= source[:section_number] %></span>
+              <span class="mx-1 text-gray-400">·</span>
+              <%= source[:title] %>
+              <p class="mt-1 text-gray-500"><%= source[:content] %></p>
+            </li>
+          <% end %>
+        </ul>
+      </details>
     <% end %>
   <% end %>
 <% end %>
