@@ -4,22 +4,24 @@
   <p><%= @error %></p>
 <% end %>
 
-<%= form_with url: questions_path, method: :post, data: { turbo: false } do |f| %>
+<%= form_with url: questions_path, method: :post, data: { turbo_frame: "results" } do |f| %>
   <%= f.text_area :text, placeholder: "e.g. Can a creature with flying be blocked?",
                          value: @question_text, rows: 3 %>
   <%= f.submit "Ask" %>
 <% end %>
 
-<% if @answer %>
-  <h2>Answer</h2>
-  <p><%= @answer %></p>
+<%= turbo_frame_tag "results" do %>
+  <% if @answer %>
+    <h2>Answer</h2>
+    <p><%= @answer %></p>
 
-  <% if @sources&.any? %>
-    <h2>Sources</h2>
-    <ul>
-      <% @sources.each do |source| %>
-        <li><strong><%= source[:section_number] %></strong> — <%= source[:title] %>: <%= source[:content] %></li>
-      <% end %>
-    </ul>
+    <% if @sources&.any? %>
+      <h2>Sources</h2>
+      <ul>
+        <% @sources.each do |source| %>
+          <li><strong><%= source[:section_number] %></strong> — <%= source[:title] %>: <%= source[:content] %></li>
+        <% end %>
+      </ul>
+    <% end %>
   <% end %>
 <% end %>
