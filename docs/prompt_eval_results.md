@@ -97,3 +97,8 @@ Rule 100.2a (constructed minimum: 60 cards) was the top result and directly answ
 | When does a triggered ability go on the stack? | ⚠️ Cited rule 117.5 (not retrieved) | ✅ Only cited 117.2a, 503.1a, 723.1a, 723.2a |
 
 Cross-reference leaking is resolved across all three previously flagged questions.
+
+| Question | Issue |
+| ---------| ------ |
+| "Can a creature be blue?" | insufficient data |
+| "Can a creature be black?" | sufficient data but reaches to another rule |

@@ -19,7 +19,7 @@ class AnswerService
     if parsed["confidence"] == "sufficient"
       { confidence: "sufficient", answer: parsed["answer"], sources: sources }
     else
-      { confidence: "insufficient", message: parsed["message"], sources: [] }
+      { confidence: "insufficient", answer: parsed["answer"], sources: sources }
     end
   end
 
