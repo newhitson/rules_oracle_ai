@@ -26,22 +26,24 @@ class QuestionsController < ApplicationController
       }
     end
 
-    answer_result = AnswerService.call(question: params[:text], rule_sections: rules)
-
-    Question.create!(
-      text: params[:text],
-      confidence: answer_result[:confidence],
-      answer: answer_result[:answer],
-      message: answer_result[:message],
-      sources: answer_result[:sources]
-    )
+    sources = rules.map { |s| s.slice(:section_number, :title, :content) }
 
     respond_to do |format|
-      format.json { render json: { answer: answer_result[:answer], sources: answer_result[:sources] } }
+      format.json do
+        answer_result = AnswerService.call(question: params[:text], rule_sections: rules)
+        Question.create!(
+          text: params[:text],
+          confidence: answer_result[:confidence],
+          answer: answer_result[:answer],
+          message: answer_result[:message],
+          sources: answer_result[:sources]
+        )
+        render json: { answer: answer_result[:answer], sources: answer_result[:sources] }
+      end
       format.html do
         @question_text = params[:text]
-        @answer = answer_result[:answer]
-        @sources = answer_result[:sources]
+        @question = Question.create!(text: params[:text], confidence: "pending", sources: sources)
+        AnswerStreamJob.perform_later(@question.id, rules)
         render :new
       end
     end

@@ -26,4 +26,9 @@ RSpec.describe Question, type: :model do
     question.confidence = "insufficient"
     expect(question).to be_valid
   end
+
+  it "is valid with confidence: pending" do
+    question.confidence = "pending"
+    expect(question).to be_valid
+  end
 end
