@@ -25,13 +25,18 @@
 
   <body class="bg-white text-gray-900 antialiased">
     <header class="border-b border-gray-100">
-      <div class="mx-auto max-w-2xl px-6 py-5">
+      <div class="mx-auto max-w-5xl px-6 py-5">
         <p class="text-lg font-bold tracking-tight">Rules Oracle</p>
         <p class="text-sm text-gray-500">Magic: The Gathering rules, answered quickly</p>
       </div>
     </header>
-    <main class="mx-auto max-w-2xl px-6 py-12">
-      <%= yield %>
-    </main>
+    <div class="mx-auto max-w-5xl px-6 py-12 flex gap-12">
+      <main class="min-w-0 flex-1">
+        <%= yield %>
+      </main>
+      <aside class="hidden lg:block w-72 shrink-0">
+        <%= render "shared/recent_questions" %>
+      </aside>
+    </div>
   </body>
 </html>

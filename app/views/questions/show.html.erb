@@ -1,0 +1,8 @@
+<h1 class="text-3xl font-bold tracking-tight mb-8"><%= @question.text %></h1>
+
+<div class="rounded-2xl border border-blue-100 bg-blue-50 px-6 py-5">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-blue-400">Answer</p>
+  <p class="text-gray-800 leading-relaxed"><%= @question.answer %></p>
+</div>
+
+<%= render "questions/sources", sources: @question.sources.map(&:symbolize_keys) %>

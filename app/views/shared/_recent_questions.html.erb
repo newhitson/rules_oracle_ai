@@ -1,0 +1,16 @@
+<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Recent Questions</h2>
+<% if @recent_questions.any? %>
+  <ul class="space-y-2">
+    <% @recent_questions.each do |question| %>
+      <li>
+        <%= link_to question_path(question),
+              class: "block rounded-lg px-3 py-2 text-sm text-gray-600
+                      hover:bg-gray-50 hover:text-gray-900 transition-colors truncate" do %>
+          <%= truncate(question.text, length: 60) %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-sm text-gray-400">No questions yet.</p>
+<% end %>

@@ -7,6 +7,10 @@ class QuestionsController < ApplicationController
   def new
   end
 
+  def show
+    @question = Question.find(params[:id])
+  end
+
   def create
     if params[:text].blank?
       respond_to do |format|
