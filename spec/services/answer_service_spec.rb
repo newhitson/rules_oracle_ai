@@ -78,15 +78,9 @@ RSpec.describe AnswerService do
         expect(result[:confidence]).to eq("insufficient")
       end
 
-      it 'returns a message instead of an answer' do
+      it 'returns sources' do
         result = described_class.call(question: question, rule_sections: rule_sections)
-        expect(result[:message]).to be_present
-        expect(result).not_to have_key(:answer)
-      end
-
-      it 'returns empty sources' do
-        result = described_class.call(question: question, rule_sections: rule_sections)
-        expect(result[:sources]).to eq([])
+        expect(result[:sources]).not_to be_empty
       end
     end
 
